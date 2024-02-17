@@ -1,12 +1,21 @@
 <app-add-todo-form (outputNameValue)="addTodo($event)"></app-add-todo-form>
 
-<app-alert  (clearMessage)="clearErrorMessage()" *ngIf="errorMessage" [errorMessage]="errorMessage"></app-alert>
+<app-alert
+  (clearMessage)="clearErrorMessage()"
+  *ngIf="errorMessage"
+  [errorMessage]="errorMessage"
+></app-alert>
 
 <div class="mt-5">
   <h4>Zadania</h4>
   <ul class="list-group todos-list" *ngIf="todos.length > 0">
     <ng-container *ngFor="let todoItem of todos; index as todoIndex">
-      <app-todo  [todoItem]="todoItem" [todoIndex]="todoIndex"></app-todo>
+      <app-todo
+        (deleteTodoItem)="deleteTodoItem(todoIndex)"
+        (changeStatus)="changeTodoStatus($event)"
+        [todoItem]="todoItem"
+        [todoIndex]="todoIndex"
+      ></app-todo>
     </ng-container>
   </ul>
   <h5 *ngIf="todos.length === 0">Aktualnie brak zadań</h5>
@@ -15,8 +24,8 @@
   </ng-template> -->
 </div>
 
-<div [ngSwitch]="testSwitchCase">
+<!-- <div [ngSwitch]="testSwitchCase">
   <p *ngSwitchCase="'tak'">Wyświetlam tak!</p>
   <p *ngSwitchCase="'nie'">Wyświetlam nie!</p>
   <p *ngSwitchDefault>Wyświetlam Default!</p>
-</div>
+</div> -->

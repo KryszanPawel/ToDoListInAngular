@@ -1,12 +1,59 @@
-<li class="list-group-item" >
-  <input type="checkbox"
+<li class="list-group-item" #li>
+  <input
+    type="checkbox"
     class="form-check-input my-1"
     [checked]="todoItem.isCompleted"
-    (change)="changeTodoStatus(todoItem)">
-  <span class="todoItem" [ngClass]="{
-    'text-decoration-line-through' : todoItem.isCompleted
-  }">{{todoIndex + 1}}. {{todoItem.name}}</span>
-  <button (click)="toggleModal()" type="button" class="btn btn-danger btn-sm mx-2">Usuń</button>
+    (change)="changeTodoStatus()"
+  />
+  <span
+    class="todoItem"
+    [ngClass]="{
+      'text-decoration-line-through': todoItem.isCompleted
+    }"
+    >{{ todoIndex + 1 }}. {{ todoItem.name | firstLetterUpperCase }}</span
+  >
+  <button
+    (click)="toggleModal()"
+    type="button"
+    class="btn btn-danger btn-sm mx-2"
+  >
+    Usuń
+  </button>
 </li>
 
-<app-modal *ngIf="openModal" (close)="toggleModal()" [title]="'Czy na pewno chcesz usunąc zadanie o numerze ' + (todoIndex + 1) + ' ?'" ></app-modal>
+<!-- <p>{{ "Test manualny" | uppercase | slice : 0 : 4 }}</p> -->
+
+<!-- <p>{{ 1.3 }}</p>
+<p>{{ "1.3" | number : "" }}</p>
+<p>{{ 0.25 | percent : "" : "pl" }}</p>
+<p>{{ 10 | currency : "PLN" : "code" : "" }}</p>
+<p>{{ "2023-10-01" | date : "shortDate" : "" }}</p> -->
+
+<!-- <p>{{ todoItem.name }}</p>
+<p>{{ todoItem.name | uppercase }}</p> -->
+<!-- <p>{{ todoItem }}</p>
+<p>{{ todoItem | json }}</p>
+<pre>{{ todoItem | json }}</pre>
+
+<p>{{ "test tytułu" | titlecase }}</p>
+<p>{{ "przytnij" | slice : 0 : 4 }}</p>
+<p *ngFor="let item of keyValueTest | keyvalue">
+  {{ item.key }} : {{ item.value }}
+</p> -->
+
+<app-modal
+  *ngIf="openModal"
+  (close)="toggleModal()"
+  [title]="
+    'Czy na pewno chcesz usunąc zadanie o numerze ' + (todoIndex + 1) + ' ?'
+  "
+>
+  <p class="p-up">Wyświetlam się powyżej</p>
+  <div class="d-flex justify-content-end" #modalDiv>
+    <!-- <input type="checkbox" #check (change)="('0')" /> -->
+    <button (click)="deleteTodo()" class="btn btn-danger btn-sm mx-2">
+      Usuń
+    </button>
+    <button (click)="toggleModal()" class="btn btn-info btn-sm">Anuluj</button>
+  </div>
+</app-modal>

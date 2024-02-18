@@ -1,39 +1,31 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Todo } from '../shared/interfaces/todo.interface';
 
 import { TodoComponent } from './todo/todo.component';
 import { TodoService } from '../core/services/todo.service';
 import { TestService } from '../core/services/test.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css'],
 })
-
-// implements OnChanges
-// implements AfterViewInit, AfterViewChecked
-export class TodoListComponent {
+export class TodoListComponent implements OnInit, OnDestroy {
   todos: Todo[] = this.todoService.todos;
   errorMessage: string = '';
-  testSwitchCase = 'nie';
 
   @Input() test!: string;
-  testService = inject(TestService);
+
+  sub!: Subscription;
+
   constructor(private todoService: TodoService) {}
-  // @ViewChild(TodoComponent) todoComponent!: TodoComponent;
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   console.log(changes);
-  // }
-
-  // ngAfterViewInit(): void {
-  //   console.log(this.todoComponent);
-  // }
-
-  // ngAfterViewChecked(): void {
-  //   console.log(this.todoComponent);
-  // }
+  ngOnInit(): void {
+    this.sub = this.todoService.todoChanged.subscribe({
+      next: (todosArray) => (this.todos = todosArray),
+    });
+  }
 
   addTodo(todo: string): void {
     if (todo.length <= 3) {
@@ -41,12 +33,10 @@ export class TodoListComponent {
       return;
     }
     this.todoService.addTodo(todo);
-    this.todos = this.todoService.todos;
   }
 
   changeTodoStatus(index: number) {
     this.todoService.changeTodoStatus(index);
-    this.todos = this.todoService.todos;
   }
 
   clearErrorMessage() {
@@ -55,6 +45,11 @@ export class TodoListComponent {
 
   deleteTodoItem(todoIndex: number) {
     this.todoService.deleteTodoItem(todoIndex);
-    this.todos = this.todoService.todos;
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub !== null) {
+      this.sub.unsubscribe();
+    }
   }
 }

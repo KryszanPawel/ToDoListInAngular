@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Todo } from 'src/app/shared/interfaces/todo.interface';
 
 @Injectable({
@@ -6,6 +7,8 @@ import { Todo } from 'src/app/shared/interfaces/todo.interface';
 })
 export class TodoService {
   private _todos: Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
+
+  todoChanged = new Subject<Todo[]>();
 
   constructor() {}
 
@@ -17,14 +20,15 @@ export class TodoService {
     console.log('Im injected');
   }
 
+  saveToLocalStorage() {
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+    this.todoChanged.next(this.todos);
+  }
+
   addTodo(name: string): void {
     let newTodo: Todo = { name, isCompleted: false };
     this._todos.push(newTodo);
     this.saveToLocalStorage();
-  }
-
-  saveToLocalStorage() {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
   }
 
   deleteTodoItem(todoIndex: number) {

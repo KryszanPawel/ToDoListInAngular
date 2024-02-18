@@ -13,6 +13,12 @@ import localePl from '@angular/common/locales/pl';
 import { registerLocaleData } from '@angular/common';
 import { FirstLetterUpperCasePipe } from './shared/pipes/first-letter-upper-case.pipe';
 import { FormsModule } from '@angular/forms';
+import { FirstLetterDirective } from './shared/directives/first-letter.directive';
+import { AppRoutingModule } from './app-routing.module';
+import { HomeComponent } from './home/home.component';
+import { RouterModule } from '@angular/router';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { TodoDetailsComponent } from './todo-details/todo-details.component';
 
 registerLocaleData(localePl);
 
@@ -27,8 +33,12 @@ registerLocaleData(localePl);
     TodoComponent,
     ModalComponent,
     FirstLetterUpperCasePipe,
+    FirstLetterDirective,
+    HomeComponent,
+    PageNotFoundComponent,
+    TodoDetailsComponent,
   ],
-  imports: [BrowserModule, FormsModule],
+  imports: [BrowserModule, FormsModule, AppRoutingModule, RouterModule],
   providers: [
     {
       provide: LOCALE_ID,

@@ -10,7 +10,14 @@ export class AddTodoFormComponent {
 
   todoName: string = '';
 
+  // person = {
+  //   name: 'test',
+  //   surname: 'testowy',
+  //   role: 'father',
+  // };
+
   addTodo() {
+    // console.log(this.person);
     this.outputNameValue.emit(this.todoName);
   }
 }

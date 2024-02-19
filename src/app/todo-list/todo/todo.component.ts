@@ -6,6 +6,8 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { TodoService } from 'src/app/core/services/todo.service';
 import { Todo } from 'src/app/shared/interfaces/todo.interface';
 
 @Component({
@@ -20,7 +22,7 @@ import { Todo } from 'src/app/shared/interfaces/todo.interface';
 // implements AfterViewInit
 export class TodoComponent implements OnDestroy, OnInit {
   @Input() todoItem!: Todo;
-  @Input() todoIndex!: number;
+  @Input() todoId!: number;
   @Output() deleteTodoItem = new EventEmitter<void>();
   @Output() changeStatus = new EventEmitter<number>();
   // @ViewChild('li') li!: ElementRef;
@@ -32,30 +34,12 @@ export class TodoComponent implements OnDestroy, OnInit {
 
   openModal: boolean = false;
 
-  constructor() {
-    // console.log(this.todoItem)
-  }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
   ngOnInit(): void {}
   ngOnDestroy(): void {}
 
-  // ngAfterViewInit(): void {
-  //   console.log(this.li);
-  // }
-
-  // ngDoCheck(): void {
-  //   console.log("Ng do check wykonany");
-  // }
-
-  // ngOnInit(): void {
-  //   console.log(this.todoItem);
-  // }
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   console.log(changes)
-  // }
-
   changeTodoStatus(): void {
-    this.changeStatus.emit(this.todoIndex);
+    this.changeStatus.emit(this.todoId);
   }
 
   toggleModal(): void {
@@ -64,5 +48,14 @@ export class TodoComponent implements OnDestroy, OnInit {
 
   deleteTodo() {
     this.deleteTodoItem.emit();
+  }
+
+  navigateToDetails() {
+    const navigationExtars: NavigationExtras = {
+      relativeTo: this.activatedRoute,
+      // queryParams: { id: this.todoIndex, test: 'wartość' },
+      // state: { example: 'test' },
+    };
+    this.router.navigate([this.todoId], navigationExtars);
   }
 }

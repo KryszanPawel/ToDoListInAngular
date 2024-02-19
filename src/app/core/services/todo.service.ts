@@ -6,7 +6,8 @@ import { Todo } from 'src/app/shared/interfaces/todo.interface';
   providedIn: 'root',
 })
 export class TodoService {
-  private _todos: Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
+  // private _todos: Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
+  private _todos: Todo[] = [];
 
   todoChanged = new Subject<Todo[]>();
 
@@ -16,8 +17,9 @@ export class TodoService {
     return this._todos.slice();
   }
 
-  log() {
-    console.log('Im injected');
+  public set setTodos(arrTodos: Todo[]) {
+    this._todos = [...arrTodos];
+    this.todoChanged.next(this.todos);
   }
 
   saveToLocalStorage() {
@@ -25,22 +27,19 @@ export class TodoService {
     this.todoChanged.next(this.todos);
   }
 
-  addTodo(name: string): void {
-    let newTodo: Todo = { name, isCompleted: false };
-    this._todos.push(newTodo);
+  addTodo(todo: Todo): void {
+    this._todos.push(todo);
     this.saveToLocalStorage();
   }
 
-  deleteTodoItem(todoIndex: number) {
-    this._todos = this.todos.filter((todo, index) => index !== todoIndex);
+  deleteTodoItem(id: number) {
+    this._todos = this.todos.filter((todo) => todo.id !== id);
     this.saveToLocalStorage();
   }
 
-  changeTodoStatus(index: number) {
-    this._todos[index] = {
-      ...this.todos[index],
-      isCompleted: !this.todos[index].isCompleted,
-    };
+  changeTodoStatus(id: number, newTodo: Todo) {
+    const index = this._todos.findIndex((todo) => todo.id === id);
+    this._todos[index] = newTodo;
     this.saveToLocalStorage();
   }
 }

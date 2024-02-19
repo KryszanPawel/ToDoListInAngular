@@ -10,7 +10,7 @@
     [ngClass]="{
       'text-decoration-line-through': todoItem.isCompleted
     }"
-    >{{ todoIndex + 1 }}. {{ todoItem.name | firstLetterUpperCase }}</span
+    >{{ todoId }}. {{ todoItem.name | firstLetterUpperCase }}</span
   >
   <button
     (click)="toggleModal()"
@@ -18,6 +18,14 @@
     class="btn btn-danger btn-sm mx-2"
   >
     Usuń
+  </button>
+  <button
+    (click)="toggleModal()"
+    type="button"
+    class="btn btn-info btn-sm mx-2"
+    (click)="navigateToDetails()"
+  >
+    Szczegóły
   </button>
 </li>
 
@@ -44,9 +52,7 @@
 <app-modal
   *ngIf="openModal"
   (close)="toggleModal()"
-  [title]="
-    'Czy na pewno chcesz usunąc zadanie o numerze ' + (todoIndex + 1) + ' ?'
-  "
+  [title]="'Czy na pewno chcesz usunąc zadanie o numerze ' + todoId + ' ?'"
 >
   <p class="p-up">Wyświetlam się powyżej</p>
   <div class="d-flex justify-content-end" #modalDiv>

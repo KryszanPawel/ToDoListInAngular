@@ -11,12 +11,24 @@
   <ul class="list-group todos-list" *ngIf="todos.length > 0">
     <ng-container *ngFor="let todoItem of todos; index as todoIndex">
       <app-todo
-        (deleteTodoItem)="deleteTodoItem(todoIndex)"
-        (changeStatus)="changeTodoStatus($event)"
+        (deleteTodoItem)="deleteTodoItem(todoItem.id)"
+        (changeStatus)="changeTodoStatus($event, todoItem)"
         [todoItem]="todoItem"
-        [todoIndex]="todoIndex"
+        [todoId]="todoItem.id"
       ></app-todo>
     </ng-container>
   </ul>
   <h5 *ngIf="todos.length === 0">Aktualnie brak zadań</h5>
+</div>
+<div class="mt-5">
+  <h4>Child routes</h4>
+  <ul>
+    <li>
+      <a routerLink="/todo/child-a">Child A</a>
+    </li>
+    <li>
+      <a routerLink="/todo/child-b">Child B</a>
+    </li>
+  </ul>
+  <router-outlet></router-outlet>
 </div>

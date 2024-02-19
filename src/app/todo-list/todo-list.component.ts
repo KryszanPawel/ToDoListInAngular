@@ -1,10 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Todo } from '../shared/interfaces/todo.interface';
 
-import { TodoComponent } from './todo/todo.component';
 import { TodoService } from '../core/services/todo.service';
-import { TestService } from '../core/services/test.service';
 import { Subscription } from 'rxjs';
+import { TodoApiService } from '../core/services/todo-api.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,32 +18,51 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   sub!: Subscription;
 
-  constructor(private todoService: TodoService) {}
+  constructor(
+    private todoService: TodoService,
+    private todoApiService: TodoApiService
+  ) {}
 
   ngOnInit(): void {
     this.sub = this.todoService.todoChanged.subscribe({
       next: (todosArray) => (this.todos = todosArray),
     });
+
+    if (this.todos.length === 0) {
+      this.todoApiService.fetchTodos().subscribe({
+        error: (err) =>
+          (this.errorMessage =
+            'Wystąpił błąd podczas pobierania listy z serwera'),
+      });
+    }
   }
 
   addTodo(todo: string): void {
-    if (todo.length <= 3) {
-      this.errorMessage = 'Zadanie powinno mieć conajmniej 4 znaki';
-      return;
-    }
-    this.todoService.addTodo(todo);
+    this.todoApiService.postTodo({ name: todo, isCompleted: false }).subscribe({
+      next: (value) => console.log(value),
+      error: (err) => (this.errorMessage = 'Wystąpił błąd podczas dodawania'),
+    });
   }
 
-  changeTodoStatus(index: number) {
-    this.todoService.changeTodoStatus(index);
+  changeTodoStatus(id: number, todo: Todo) {
+    this.todoApiService
+      .patchTodo(id, { isCompleted: !todo.isCompleted })
+      .subscribe({
+        next: (value) => console.log(value),
+        error: (err) =>
+          (this.errorMessage = 'Wystąpił błąd podczas zmiany wartości'),
+      });
   }
 
   clearErrorMessage() {
     this.errorMessage = '';
   }
 
-  deleteTodoItem(todoIndex: number) {
-    this.todoService.deleteTodoItem(todoIndex);
+  deleteTodoItem(id: number) {
+    this.todoApiService.deleteTodo(id).subscribe({
+      next: (value) => console.log(value),
+      error: (err) => (this.errorMessage = 'Wystąpił błąd podczas usuwania'),
+    });
   }
 
   ngOnDestroy(): void {

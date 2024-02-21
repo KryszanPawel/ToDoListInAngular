@@ -30,9 +30,11 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
     if (this.todos.length === 0) {
       this.todoApiService.fetchTodos().subscribe({
-        error: (err) =>
-          (this.errorMessage =
-            'Wystąpił błąd podczas pobierania listy z serwera'),
+        error: (err) => {
+          console.log(err);
+          this.errorMessage =
+            'Wystąpił błąd podczas pobierania listy z serwera';
+        },
       });
     }
   }
